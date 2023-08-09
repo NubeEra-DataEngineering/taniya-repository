@@ -113,3 +113,68 @@ display(top_category)
 top_customers = spark.sql("SELECT a.customer_id, a.first_name, a.last_name, SUM(b.sales) as total_spending FROM Ecom_data a inner join Product_sales b on a.product_id = b.product_id GROUP BY customer_id, first_name, last_name ORDER BY total_spending DESC LIMIT 10")
 
 display(top_customers)
+
+# COMMAND ----------
+
+import matplotlib.pyplot as plt
+import pandas
+
+# Convert PySpark DataFrame to Pandas DataFrame
+pandas_unique_customers = unique_customers.toPandas()
+
+# Get the unique customers count
+unique_customers_count = pandas_unique_customers.iloc[0]['unique_customers']
+
+# Create the bar plot using Matplotlib
+plt.figure(figsize=(6, 4))
+plt.bar(["Unique Customers"], [unique_customers_count])
+plt.ylabel("Count")
+plt.title("Number of Unique Customers Visited the Website")
+plt.tight_layout()
+
+# Display the plot
+plt.show()
+
+
+# COMMAND ----------
+
+# Convert PySpark DataFrame to Pandas DataFrame
+pandas_top_category = top_category.toPandas()
+
+# Sort Pandas DataFrame by revenue
+sorted_pandas_top_category = pandas_top_category.sort_values(by="revenue", ascending=False)
+
+# Create the bar plot using Matplotlib
+plt.figure(figsize=(6, 6))
+plt.bar(sorted_pandas_top_category["category"], sorted_pandas_top_category["revenue"])
+plt.xlabel("Product Category")
+plt.ylabel("Revenue")
+plt.title("Product Category Revenue")
+plt.xticks(rotation=45, ha="right")  # Rotate x-axis labels for better visibility
+plt.tight_layout()
+
+# Display the plot
+plt.show()
+
+
+# COMMAND ----------
+
+# Visualization 3: Top 10 Customers
+# Convert PySpark DataFrame to Pandas DataFrame
+pandas_top_customers = top_customers.toPandas()
+
+# Sort Pandas DataFrame by total_spending
+sorted_pandas_top_customers = pandas_top_customers.sort_values(by="total_spending", ascending=False)
+
+# Create the bar plot using Matplotlib
+plt.figure(figsize=(10, 6))
+plt.bar(sorted_pandas_top_customers["last_name"], sorted_pandas_top_customers["total_spending"])
+plt.xlabel("Last Name")
+plt.ylabel("Total Spending")
+plt.title("Top 10 Customers by Total Spending")
+plt.xticks(rotation=45, ha="right")  # Rotate x-axis labels for better visibility
+plt.tight_layout()
+
+# Display the plot
+plt.show()
+
